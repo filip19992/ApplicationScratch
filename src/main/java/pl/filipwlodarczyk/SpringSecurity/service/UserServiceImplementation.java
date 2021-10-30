@@ -6,6 +6,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.filipwlodarczyk.SpringSecurity.model.Role;
@@ -29,6 +31,7 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     @Override
     public AppUser saveUser(AppUser user) {
         log.info("Saving new user {}", user.getName());
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         return userRepo.save(user);
     }
 
