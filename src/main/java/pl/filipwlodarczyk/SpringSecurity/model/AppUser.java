@@ -11,6 +11,7 @@ import java.util.Collection;
 
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.AUTO;
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Data
@@ -18,7 +19,9 @@ import static javax.persistence.GenerationType.AUTO;
 @AllArgsConstructor
 public class AppUser {
 
-    @Id @GeneratedValue(strategy = AUTO)
+    @Id
+    @SequenceGenerator(name = "userId_sequence", sequenceName = "userId_sequence", allocationSize = 1)
+    @GeneratedValue(generator = "userId_sequence",strategy = IDENTITY)
     private Long id;
     private String name;
     private String username;

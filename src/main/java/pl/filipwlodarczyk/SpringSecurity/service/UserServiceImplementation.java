@@ -18,6 +18,7 @@ import pl.filipwlodarczyk.SpringSecurity.repo.UserRepo;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -30,9 +31,17 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
 
     @Override
     public AppUser saveUser(AppUser user) {
-        log.info("Saving new user {}", user.getName());
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-        return userRepo.save(user);
+
+        boolean userExists = userRepo.findByUsername(user.getUsername()).isPresent();
+        if(userExists) {
+            log.info("Cant save user {}, credentials are taken", user.getUsername());
+            throw new IllegalStateException("");
+        } else {
+
+            log.info("Saving new user {}", user.getName());
+            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+            return userRepo.save(user);
+        }
     }
 
     @Override
@@ -44,7 +53,7 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     @Override
     public void AddRoleToUser(String username, String roleName) {
         log.info("Saving new role {}, to the user {}", roleName, username);
-        AppUser byUsername = userRepo.findByUsername(username);
+        AppUser byUsername = userRepo.findByUsername(username).get();
         byUsername.getRoles().add(roleRepo.findByName(roleName));
 
     }
@@ -52,7 +61,7 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     @Override
     public AppUser getUserByUsername(String username) {
         log.info("Fetching user {}", username);
-        return userRepo.findByUsername(username);
+        return userRepo.findByUsername(username).get();
     }
 
     @Override
@@ -62,8 +71,23 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     }
 
     @Override
+    public String signUpUser(AppUser user) {
+        boolean userExists = userRepo.findByUsername(user.getUsername()).isPresent();
+        if(userExists) {
+            log.info("Cant save user {}, credentials are taken", user.getUsername());
+            throw new IllegalStateException("");
+        } else {
+
+            log.info("Saving new user {}", user.getName());
+            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+            userRepo.save(user);
+        }
+        return " ";
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-       AppUser user = userRepo.findByUsername(username);
+       AppUser user = userRepo.findByUsername(username).get();
        if(user == null) {
            log.error("User not found in the database");
            throw new UsernameNotFoundException("User not found in the database");

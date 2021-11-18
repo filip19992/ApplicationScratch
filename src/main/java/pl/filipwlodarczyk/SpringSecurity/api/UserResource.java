@@ -48,13 +48,12 @@ public class UserResource {
 
     @PostMapping("/user/save")
     public ResponseEntity<AppUser> saveUser(@RequestBody AppUser appUser) {
-
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
         return ResponseEntity.created(uri).body(userService.saveUser(appUser));
     }
 
     @PostMapping("/role/save")
-    public ResponseEntity<Role> saveUser(@RequestBody Role role) {
+    public ResponseEntity<Role> saveRole(@RequestBody Role role) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role/save").toUriString());
         return ResponseEntity.created(uri).body(userService.saveRole(role));
     }
