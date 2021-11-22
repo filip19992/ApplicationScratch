@@ -21,7 +21,7 @@ public class RegistrationService {
     public void register(RegistrationRequest request) {
         if(emailValidator.test(request.getEmail())) {
 
-            userService.signUpUser((new AppUser(null, request.getName(), request.getUsername(), request.getPassword(),
+            userService.signUpUser((new AppUser(null, request.getName(), request.getUsername(), request.getPassword(), false,
                     new ArrayList<>())));
 
         userService.AddRoleToUser(request.getUsername(), "ROLE_USER");

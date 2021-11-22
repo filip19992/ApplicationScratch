@@ -26,6 +26,7 @@ public class AppUser {
     private String name;
     private String username;
     private String password;
+    private boolean enabled = false;
 
     @ManyToMany(fetch = EAGER)
     private Collection<Role> roles = new ArrayList<>();

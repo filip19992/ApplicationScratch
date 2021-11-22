@@ -75,14 +75,14 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         boolean userExists = userRepo.findByUsername(user.getUsername()).isPresent();
         if(userExists) {
             log.info("Cant save user {}, credentials are taken", user.getUsername());
-            throw new IllegalStateException("");
+            throw new IllegalStateException("Credentials are taken");
         } else {
 
             log.info("Saving new user {}", user.getName());
             user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
             userRepo.save(user);
         }
-        return " ";
+        return "it works";
     }
 
     @Override
