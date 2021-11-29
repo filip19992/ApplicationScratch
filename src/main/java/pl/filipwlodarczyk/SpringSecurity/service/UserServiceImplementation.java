@@ -7,18 +7,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.filipwlodarczyk.SpringSecurity.model.Role;
 import pl.filipwlodarczyk.SpringSecurity.model.AppUser;
+import pl.filipwlodarczyk.SpringSecurity.model.Role;
+import pl.filipwlodarczyk.SpringSecurity.registration.token.ConfirmationTokenService;
 import pl.filipwlodarczyk.SpringSecurity.repo.RoleRepo;
 import pl.filipwlodarczyk.SpringSecurity.repo.UserRepo;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -28,12 +27,13 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
 
     private final UserRepo userRepo;
     private final RoleRepo roleRepo;
+    private final ConfirmationTokenService confirmationTokenService;
 
     @Override
     public AppUser saveUser(AppUser user) {
 
         boolean userExists = userRepo.findByUsername(user.getUsername()).isPresent();
-        if(userExists) {
+        if (userExists) {
             log.info("Cant save user {}, credentials are taken", user.getUsername());
             throw new IllegalStateException("");
         } else {
@@ -71,9 +71,9 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     }
 
     @Override
-    public String signUpUser(AppUser user) {
+    public void signUpUser(AppUser user) {
         boolean userExists = userRepo.findByUsername(user.getUsername()).isPresent();
-        if(userExists) {
+        if (userExists) {
             log.info("Cant save user {}, credentials are taken", user.getUsername());
             throw new IllegalStateException("Credentials are taken");
         } else {
@@ -82,23 +82,34 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
             user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
             userRepo.save(user);
         }
-        return "it works";
+
+//        String token = UUID.randomUUID().toString();
+//        ConfirmationToken confirmationToken = new ConfirmationToken(
+//                token,
+//                LocalDateTime.now(),
+//                LocalDateTime.now().plusMinutes(15),
+//                user
+//        );
+//
+//        confirmationTokenService.saveConfirmationToken(confirmationToken);
+//        return token;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-       AppUser user = userRepo.findByUsername(username).get();
-       if(user == null) {
-           log.error("User not found in the database");
-           throw new UsernameNotFoundException("User not found in the database");
-       } else {
-           log.info("User found in the database");
-       }
+        AppUser user = userRepo.findByUsername(username).get();
+        if (user == null) {
+            log.error("User not found in the database");
+            throw new UsernameNotFoundException("User not found in the database");
+        } else {
+            log.info("User found in the database");
+        }
 
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-       user.getRoles().forEach(role -> {
-           authorities.add(new SimpleGrantedAuthority(role.getName()));});
-       return new org.springframework.security.core.userdetails.User(user.getUsername(),
-               user.getPassword(), authorities);
+        user.getRoles().forEach(role -> {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        });
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+                user.getPassword(), authorities);
     }
 }

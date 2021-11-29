@@ -14,10 +14,10 @@ import pl.filipwlodarczyk.SpringSecurity.service.RegistrationService;
 @AllArgsConstructor
 public class RegistrationController {
 
-    private RegistrationService registrationService;
+    private final RegistrationService registrationService;
 
     @PostMapping
-    public void register(@RequestBody RegistrationRequest request) {
-         registrationService.register(request);
+    public String register(@RequestBody RegistrationRequest request) throws Exception {
+       return  registrationService.register(request);
     }
 }

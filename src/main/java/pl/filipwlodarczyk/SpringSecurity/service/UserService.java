@@ -12,5 +12,5 @@ public interface UserService {
     void AddRoleToUser(String username, String roleName);
     AppUser getUserByUsername(String username);
     List<AppUser> getUsers();
-    String signUpUser(AppUser appUser);
+    void signUpUser(AppUser appUser);
 }
