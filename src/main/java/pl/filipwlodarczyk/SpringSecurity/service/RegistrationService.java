@@ -26,7 +26,8 @@ public class RegistrationService {
     public String register(RegistrationRequest request) throws Exception {
         if(emailValidator.test(request.getEmail())) {
 
-            AppUser appUser = new AppUser(null, request.getName(), request.getUsername(), request.getPassword(), false,
+            AppUser appUser = new AppUser(null, request.getName(), request.getUsername(),
+                    request.getPassword(), false, false,
                     new ArrayList<>());
 
             userService.signUpUser((appUser));

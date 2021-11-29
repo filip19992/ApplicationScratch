@@ -3,6 +3,7 @@ package pl.filipwlodarczyk.SpringSecurity.service;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -84,16 +85,6 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
             userRepo.save(user);
         }
 
-//        String token = UUID.randomUUID().toString();
-//        ConfirmationToken confirmationToken = new ConfirmationToken(
-//                token,
-//                LocalDateTime.now(),
-//                LocalDateTime.now().plusMinutes(15),
-//                user
-//        );
-//
-//        confirmationTokenService.saveConfirmationToken(confirmationToken);
-//        return token;
     }
 
     @SneakyThrows
@@ -104,7 +95,8 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
             log.error("User not found in the database");
             throw new UsernameNotFoundException("User not found in the database");
         } else if (!user.isEnabled()){
-            throw new Exception("User is not enabled");
+            log.error("User is not enabled consider checking your email confirmation");
+            throw new InternalAuthenticationServiceException("User is not enabled consider checking your email confirmation");
         }
 
         else {

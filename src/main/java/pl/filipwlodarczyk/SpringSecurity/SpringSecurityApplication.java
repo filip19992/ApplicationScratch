@@ -34,13 +34,17 @@ public class SpringSecurityApplication {
             userService.saveRole(new Role(null, "ROLE_USER"));
             userService.saveRole(new Role(null, "ROLE_MANAGER"));
 
-            userService.saveUser(new AppUser(null, "Filip Wlodarczyk", "filip", "password", true,
+            userService.saveUser(new AppUser(null, "Filip Wlodarczyk", "filip",
+                    "password", true, false,
                     new ArrayList<>()));
-            userService.saveUser(new AppUser(null, "Maciek Szewczyk", "maciek", "password", true,
+            userService.saveUser(new AppUser(null, "Maciek Szewczyk", "maciek",
+                    "password", true, false,
                     new ArrayList<>()));
-            userService.saveUser(new AppUser(null, "Szymon Steplewski", "szymon", "password", true,
+            userService.saveUser(new AppUser(null, "Szymon Steplewski", "szymon",
+                    "password", true, false,
                     new ArrayList<>()));
-            userService.saveUser(new AppUser(null, "Kuba Górski", "kuba", "password", true,
+            userService.saveUser(new AppUser(null, "Kuba Górski", "kuba", "password",
+                    true, false,
                     new ArrayList<>()));
 
             userService.AddRoleToUser("filip", "ROLE_ADMIN");
