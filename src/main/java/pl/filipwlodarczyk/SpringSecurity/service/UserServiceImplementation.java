@@ -1,6 +1,7 @@
 package pl.filipwlodarczyk.SpringSecurity.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -95,13 +96,18 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
 //        return token;
     }
 
+    @SneakyThrows
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser user = userRepo.findByUsername(username).get();
         if (user == null) {
             log.error("User not found in the database");
             throw new UsernameNotFoundException("User not found in the database");
-        } else {
+        } else if (!user.isEnabled()){
+            throw new Exception("User is not enabled");
+        }
+
+        else {
             log.info("User found in the database");
         }
 

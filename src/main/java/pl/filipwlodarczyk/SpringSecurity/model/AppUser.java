@@ -31,4 +31,7 @@ public class AppUser {
     @ManyToMany(fetch = EAGER)
     private Collection<Role> roles = new ArrayList<>();
 
+    public boolean isEnabled() {
+        return enabled;
+    }
 }
