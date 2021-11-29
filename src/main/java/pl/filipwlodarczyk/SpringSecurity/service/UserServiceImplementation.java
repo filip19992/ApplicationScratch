@@ -110,4 +110,9 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         return new org.springframework.security.core.userdetails.User(user.getUsername(),
                 user.getPassword(), authorities);
     }
+
+    @Override
+    public int enableAppUser(String username) {
+        return userRepo.enableAppUser(username);
+    }
 }

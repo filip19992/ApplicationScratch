@@ -13,4 +13,5 @@ public interface UserService {
     AppUser getUserByUsername(String username);
     List<AppUser> getUsers();
     void signUpUser(AppUser appUser);
+    int enableAppUser(String username);
 }
